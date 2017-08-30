@@ -1,0 +1,444 @@
+---
+output:
+  revealjs::revealjs_presentation:
+    incremental: false
+    self_contained: true
+    keep_md: true
+    center: true
+    theme: white
+    css: ../assets/custom.css
+    transition: slide
+    slide_level: 1
+    includes:
+      in_header: ../assets/header.html
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(width = 35)
+```
+
+<section class="white-font" data-background="#4E2A84">
+<h1> R Fundamentals Review</h1>
+
+<p>
+Christina Maimone <br>
+<a href="mailto:christina.maimone@northwestern.edu">christina.maimone@northwestern.edu</a><br>
+<a href="http://www.it.northwestern.edu/research">Research Computing Services</a>
+</p>
+</section>
+
+---
+
+## Purpose
+
+Quick review of material covered by DataCamp's [Intro to R](https://campus.datacamp.com/courses/free-introduction-to-r) course.
+
+Additional topics from [Part 1]() and [Part 2]() of the Research Computing workshop materials.
+
+
+
+---
+
+<section class="white-font" data-background="#4E2A84">
+<h1>Let's Start...</h1>
+</section>
+
+---
+
+## Arithmetic 
+
+```{r, eval=FALSE}
+2 + 2
+5 %% 2
+3.452 * 6
+2^4
+```
+
+---
+
+## Comparisons
+
+```{r, eval=FALSE}
+1 < 2
+TRUE == FALSE
+'a' == "Boy"
+```
+
+<aside class="notes">
+double equals for testing for equality
+
+Note that character vectors/strings can use single or double quotes.
+</aside>
+
+---
+
+## Functions
+
+```{r, eval=FALSE}
+log(10)
+log(16, base=2)
+```
+
+[`log` help page](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Log.html)
+
+<aside class="notes">
+Functions are called with `functionName(parameters)`.  
+
+Multiple paramters are comma-separated.  
+
+Paramters can be named. 
+
+For unnamed parameters, the order matters.  
+
+R functions don't change the objects passed to them.
+</aside>
+
+---
+
+
+## Variables
+
+Use the `<-` operator to assign values to variables.  
+
+```{r}
+x <- 4
+```
+
+`=` also works but is bad practice and less common.
+
+---
+
+## Comments
+
+The comment character is `#`.  
+
+It can be used anywhere on a line to comment out the rest of the line.  
+
+<aside class="notes"> 
+no multiline comment characters (use RStudio)
+</aside>
+
+---
+
+<section class="white-font" data-background="#4E2A84">
+<h1>Vectors and Factors</h1>
+</section>
+
+---
+
+## Vectors
+
+Only one type of data allowed!
+
+```{r}
+x <- c(1,2,3,4,5) # good
+x
+x <- c(1, "cat", TRUE) # bad
+x
+```
+
+<aside class="notes">
+Vectors are also called arrays.  You can create a vector with the `c()` function.  `c` stands for combine.
+</aside>
+
+---
+
+## Vector Indexing
+
+Indices start with 1 
+
+```{r}
+x<-c('a', 'b', 'c', 'd', 'e')
+x[1]
+```
+
+<aside class="notes">
+In some other languages, indices start with 0 instead.
+</aside>
+
+---
+
+## Vector Indexing
+
+You can take slices of vectors
+
+```{r}
+x[1:3]
+```
+
+Or exclude values with a negative sign:
+
+```{r}
+x[-1]
+```
+
+---
+
+## Vector Indexing
+
+You can use a vector of integers or booleans to select from a vector as well:
+
+```{r}
+x[x<'c']
+x[c(1,3,5)]
+```
+
+---
+
+# Vectors: Checking Values
+
+Check if a value is in a vector with `%in%`
+
+```{r}
+'c' %in% x
+```
+
+Or get the first index position of a value with `match()`
+
+```{r}
+match('b', x)
+```
+
+<aside class="notes">
+Use the `which` function for all indices
+</aside>
+
+---
+
+## Vectors with Functions
+
+Some functions will apply to each element of a vector
+
+Others take a vector as a parameter
+
+---
+
+```{r}
+x <- 1:5
+log(x)
+var(x)
+```
+
+---
+
+## Factors 
+
+Categorical variables
+
+```{r}
+colors<-c("red", "blue", "green", 
+          "red", "red", "blue")
+colors<-factor(colors)
+levels(colors)
+```
+
+---
+
+## Factors
+
+Be careful of assignments
+
+```{r}
+colors[1]<-"pink"
+colors
+```
+
+---
+
+To fix, add a level
+
+```{r}
+colors<-factor(colors, 
+               levels=c(levels(colors), "pink")) 
+colors[1]<-"pink"  
+colors
+```
+
+---
+
+<section class="white-font" data-background="#4E2A84">
+<h1>Special Types</h1>
+</section>
+
+---
+
+## Missing Data (`NA`)
+
+
+```{r}
+tmp<-c(1, 2, 5, NA, 6, NA)
+is.na(tmp)
+sum(is.na(tmp))
+```
+
+<aside class="notes">
+Missing data in R is encoded as `NA`.  You can test for `NA` (`is.na`).  Some functions will ignore `NA` when doing computations.  Others will ignore missing values if you tell them to.  Others will process `NA` and give you a result of `NA`.  
+
+Why does this work?  How can you sum logical values?  This takes advantage of the trick that TRUE=1 and FALSE=0. 
+</aside>
+
+---
+
+## `NA` and Functions
+  
+```{r}
+mean(tmp)
+```
+
+`mean` results in `NA`.  It has an option to exclude missing:
+  
+```{r}
+mean(tmp, na.rm=TRUE)
+```
+
+<aside class="notes">
+Different functions handle NA differently
+</aside>
+
+---
+
+## `NA` and Functions
+
+`table` behaves differently than `mean`:
+  
+```{r}
+tmp<-c("A", "A", NA, "B", NA, "A")
+table(tmp)
+```
+
+It excludes `NA` by default.  
+
+---
+
+## `NA` in Tables
+
+You have to tell `table` to include `NA`:
+  
+```{r}
+table(tmp, useNA = "ifany")
+```
+
+---
+
+## Other Special Values
+
+```{r}
+c()
+0/0
+1/0
+```
+
+---
+
+<section class="white-font" data-background="#4E2A84">
+<h1>More Complex Data Structures</h1>
+</section>
+
+---
+
+## Lists
+
+```{r}
+l1 <- list(1, "a", TRUE, 1+4i)
+l1
+```
+
+---
+
+## Lists
+
+```{r}
+l2 <- list(title = "Research Bazaar", 
+           numbers = 1:10, data = TRUE )
+l2
+```
+
+<aside class="notes">
+Lists are a bit like complex vectors.  An element of a list can hold any other object, including another list.  You can keep multi-dimensional and ragged data in R using lists.  
+</aside>
+
+---
+
+## Indexing Lists
+
+```{r}
+l2[2]
+```
+
+<aside class="notes">
+Indexing lists is a little different.  `[[1]]` is the first element of the list as whatever type it was.  `[1]` is a subset of the list -- the first element of the list as a list.  You can also access list elements by name.
+</aside>
+
+---
+
+## Indexing Lists
+
+```{r}
+l2$numbers
+l2[[2]]
+l2[[2]][1]
+```
+
+<aside class="notes">
+Indexing lists is a little different.  ``[[1]]`` is the first element of the list as whatever type it was.  ``[1]`` is a subset of the list -- the first element of the list as a list.  You can also access list elements by name.
+</aside>
+
+---
+
+## Matrices
+
+```{r}
+matrix(c('a', 'b', 'c', 'd'), nrow=2)
+```
+
+<aside class="notes">
+Matrices in R are two-dimensional arrays.  All values of a matrix must be of the same type.
+
+Matrices are used sparingly in R, primarly for numerical calculations or explicit matrix manipulation.
+</aside>
+
+---
+
+## Matrices
+
+```{r}
+y<-matrix(1:25, nrow=5, byrow=TRUE)
+y
+```
+
+---
+
+## Indexing Matrices 
+
+`matrix[row, column]`
+
+```{r}
+y[1,1]
+y[1,]
+y[,1]
+```
+
+<aside class="notes">
+Elements in a matrix are indexed like `mat[row, col]`.  Omitting a value for row or column will give you the entire column or row, respectively.
+
+Using just a single index will get the element from the specified position, if the matrix were turned into a vector first
+</aside>
+
+---
+
+```{r}
+y[1:2,3:4]
+y[,c(1,4)]
+```
+
+
+---
+
+
+## Data Frames
+
+List of heterogeneous vectors of the same length
+
+R's key object >>> We'll review in detail
+
+

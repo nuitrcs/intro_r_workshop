@@ -1,0 +1,177 @@
+---
+title: "Exercises Part 2"
+author: "Christina Maimone"
+date: "`r Sys.Date()`"
+output: html_document
+params:
+    answers: TRUE
+---
+
+<!--
+To Knit the file with and without answers
+rmarkdown::render('part2_exercises_with_answers.Rmd',
+                  output_file = 'part2_exercises_with_answers.html',
+                  params = list(answers=TRUE))
+rmarkdown::render('part2_exercises_with_answers.Rmd',
+                  output_file = 'part2_exercises.html',
+                  params = list(answers=FALSE))
+--->
+
+```{r, echo=FALSE, eval=TRUE}
+answers<-params$answers
+```
+
+```{r global_options, echo = FALSE, include = FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning = FALSE, message = FALSE,
+                      cache = FALSE, tidy = FALSE, size = "small")
+#knitr::opts_knit$set(root.dir=)
+```
+
+
+# Exercise: Make a `data.frame`
+
+Make a data frame, called `mydata`, that has 3 variables: `var1` which has the numbers 1 to 10, `var2` which has the letters A-J, and `var3` which has any 10 numbers you want to include.
+
+After you've made the data frame, then add a fourth column, `month`, with the first 10 months (hint: search the help for "Constants"). 
+
+```{r, echo=answers, eval=answers}
+mydata<-data.frame(var1=1:10, var2=LETTERS[1:10], 
+                   var3=c(9,4.5,33,45.6,-14,3,7,0.2,0,7))
+mydata
+mydata$month <- month.name[1:10]
+mydata
+```
+
+
+
+# Exercise: Explore Differences in Selecting from `data.frame`
+
+Run each command below to figure out what type of data you get back.  This uses `mydata`, which you should have created above.
+
+Hint: Use the function `typeof()` to examine what is returned in each case.
+
+```{r, eval=FALSE}
+mydata[1]
+mydata[[1]]
+mydata$var2
+mydata["var2"]
+mydata[1, 1]
+mydata[, 1]
+mydata[1,]
+mydata[-1,]
+```
+
+```{asis, echo=answers}
+Why is `mydata$var2` of type integer?  Factors are stored as integers.  Why is `var2` a factor in the first place?  Take a look at the help page for `data.frame` to see if you can find the option that turned letters into factors.   
+```
+
+
+
+# Exercise: Working with a `data.frame`
+
+R has some built-n data sets.  One of them is called `iris`.  You can just use the `iris` object (it's a `data.frame`) without creating it first. 
+
+Hint: if you want `iris` to show up in the Environment tab, load it into your environment with `data(iris)`.  Otherwise, you can still use it, but it may not show in that tab.
+
+Get the dimensions of `iris`.  Then get a list of the names.
+
+Output the first 10 rows of `iris`.
+
+View the iris data frame in the RStudio data viewer.
+
+Select from the `iris` data frame the observations where the `Sepal.Width` is less than 2.5.  Do the same, but add the condition that the `Sepal.Length` must also be less than 5.
+
+Using `which.max`, select a row with maximum `Sepal.Length`.  Is there only one row with the maximum value? 
+
+Rename the column `Petal.Width` to `petalwidth`.  Challenge: do this without hard coding in the column number.
+
+
+
+```{r, echo=answers, eval=answers}
+dim(iris)
+names(iris)
+head(iris, 10)
+View(iris) # or click on the name iris in the Environment tab to the right if you've loaded it there.
+iris[iris$Sepal.Width < 2.5,]
+iris[iris$Sepal.Width < 2.5 & iris$Sepal.Length < 5,]
+iris[which.max(iris$Sepal.Length),] # which.max only returns first index of a maximum value
+iris[iris$Sepal.Length == max(iris$Sepal.Length),] # check for other max Sepal.Length rows
+names(iris)[names(iris)=='Petal.Width'] <- 'pedalwidth'
+names(iris)
+```
+
+
+# Exercise: Make a `list`
+
+Create a list called `mysubsets` that has two named components: `shortpetals`, which is a subset of the `iris` data frame with `Petal.Length` < 3, and `shortsepals`, which is a subset of the `iris` data frame with `Sepal.Length` < 5.
+
+Make a table of the `Species` in the `shortsepals` subset.  
+
+```{r, echo=answers, eval=answers}
+mysubsets<-list(shortpetals=iris[iris$Petal.Length < 3,], shortsepals=iris[iris$Sepal.Length < 5,])
+mysubsets
+table(mysubsets$shortsepals$Species)
+```
+
+
+# Exercise: Fix subsetting errors
+
+A researcher is trying to select observations from the `iris` data frame for the setosa species, but gets an error:  
+
+```{r, error=TRUE}
+iris[Species="setosa"]
+```
+
+Correct this expression to select the observations the researcher wants.  Hint: there may be more than 1 thing wrong.
+
+```{asis, echo=answers}
+Answer: Three mistakes, in the order that R will give you errors: 1) Use `==`, not `=`, to test for equality; 2) Include the name of the data frame before the column: `iris$Species`; and 3) The researcher forgot the comma after the condition to indicate to select all columns from the data frame.
+```
+
+```{r, echo=answers, eval=answers}
+iris[iris$Species=="setosa",]
+```
+
+
+# Challenge Exercise: Matrix Manipulation
+
+Using information from [Linear Algebra in R](https://www.math.uh.edu/~jmorgan/Math6397/day13/LinearAlgebraR-Handout.pdf) by Søren Højsgaard if needed, create a 10 x 5 matrix of random normal numbers and a 5 x 1 vector of values 1 to 5 and multiply them using matrix multiplication.  Transpose your result.
+
+Create a 6 x 6 matrix of random normal draws and take it's inverse (solve it).  Extract the diagonal from the result.  
+
+Hint: Generate random normal draws with `rnorm`: look it up to see the options.
+
+Hint: Matrix multiplication operator is `%*%`.
+
+```{r, echo=answers}
+X <- matrix(rnorm(50), nrow=10)
+y <- 1:5
+t(X %*% y) # t() is for transpose
+
+X <- matrix(rnorm(36), nrow=6)
+solve(X)
+diag(solve(X))
+```
+
+```{asis, echo=answers}
+Note that the specific numbers may differ when you run this code due to randomness.  To prevent numbers from changing, set the random seed with `set.seed(123)` where `123` is any integer.
+```
+
+
+
+# Challenge Exercise: List Indexing
+
+Select the vector of letters from the following object.  
+
+Do it both using names (hint: printing the object might give you a hint) and using index numbers.
+
+```{r}
+nested_list <- list(level1 = list(level2 = list(letters = LETTERS)))
+```
+
+```{r, echo=answers}
+nested_list$level1$level2$letters
+nested_list[[1]][[1]][[1]]
+```
+
+

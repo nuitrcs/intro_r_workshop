@@ -1,0 +1,221 @@
+---
+title: "R Fundamental Review: Part 2"
+author: "Christina Maimone"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+params:
+  notes: no
+---
+
+<!--
+To Knit the file without toc for printing
+rmarkdown::render('condensed_review/fundamentals_review_part2.Rmd',
+                  output_options=list(toc=FALSE,toc_float=FALSE),
+                  output_file = 'condensed_review/review2_print.html',
+                  params = list(notes=TRUE))
+--->
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+notes<-params$notes
+```
+
+
+## Data Frames
+
+Data frames are the core data structure in R.  A data frame is a list of named vectors with the same length.  Columns are typically variables and rows are observations.  Different columns can have different types of data:
+
+```{r}
+id<-1:20
+id
+color<-c(rep("red", 3), rep("green",10), rep("blue", 7))
+color
+score<-runif(20)
+score
+df<-data.frame(id, color, score)
+df
+```
+
+Instead of making individual objects first, we could do it all together:
+
+```{r}
+df<-data.frame(id=1:20, 
+               color=c(rep("red", 3), rep("green",10), rep("blue", 7)),
+               score=runif(20))
+```
+
+
+Data frames can be indexed like matrices to retrieve the values.  
+
+```{r}
+df[2,2]
+df[1,]
+df[,3]
+```
+
+You can use negative values when indexing to exclude values:
+
+```{r}
+df[,-2]
+df[-1:-10,]
+```
+
+You can also use the names of the columns after a `$` or in the indexing:  
+
+```{r}
+df$color
+```
+
+Indexing into a data frame with a single integer or name of the column will give you the column(s) specified as a new data frame.
+
+```{r}
+df['color']
+df[2:3]
+```
+
+Instead of index numbers or names, you can also select values by using logical statements.  This is usually done with selecting rows. 
+
+```{r}
+df[df$color=="green",]
+df[df$score>.5,]
+```
+
+
+You can assign names to the rows of a data frame as well as to the columns, and then use those names for indexing and selecting data.
+
+```{r}
+rownames(df)
+```
+
+You can add columns or rows simply by assigning values to them.  There are also `rbind` and `cbind` (for row bind and column bind) functions that can be useful.
+
+```{r}
+df$year<-1901:1920
+df
+```
+
+```{r}
+df[22,]<-list(21, "green", 0.4, 1921)
+```
+
+Note that we had to use a list for adding a row because there are different types.  The above creates a row of missing data, because we had 20 rows and added the 22nd.  
+
+```{r}
+df
+```
+
+This is different than adding a row by name:
+
+```{r}
+df["24",]<-list(22, "green", 0, 2000)
+df
+```
+
+
+
+## Viewing Matrices and Data Frames
+
+You can use the `View` function to open a spreadsheet-style view of a matrix or data frame.  Use the `View` function, or double-click on the name of the object in the Environment tab in the upper right window in RStudio.
+
+You can also use the `head` function to see the first 6 (by default) rows of a matrix or data frame:
+
+```{r}
+head(df)
+```
+
+You can get dimensions with:
+
+```{r}
+dim(y)
+dim(df)
+nrow(y)
+ncol(df)
+```
+
+The `length` of a matrix is the number of elements.  The `length` of a data frame is the number of columns:
+
+```{r}
+length(y)
+length(df)
+```
+
+# Workspace Management
+
+List objects in your workspace
+
+```{r, eval=FALSE}
+ls()
+```
+
+Or look in the Environment window in the upper right in RStudio.
+
+You can remove objects from your workspace:
+
+```{r}
+myVariable <- 1:10
+rm(myVariable)
+```
+
+Or clear your entire workspace (can't be undone):
+
+```{r, eval=FALSE}
+rm(list = ls())
+```
+
+You can also clear your workspace by clicking on the broom in the Environment window in RStudio.
+
+You can save an image of your entire workspace to pick up where you left off in another session of R (this is what R asks you if you want to do when you quit).  Workspace files are saved with the extension .RData.
+
+```{r, eval=FALSE}
+save.image("20170112.RData")
+```
+
+You can load this file later with the `load` function
+
+```{r, eval=FALSE}
+load("20170112.RData")
+```
+
+Note that `load` will overwrite any objects already in your workspace that have the same names as objects in the file you are loading.  I don't recommend using `save` and `load` regularly.  It's generally better to save specific data files instead.
+
+
+# Packages
+
+Much of R's power comes from contributed packages.  You can install and manage packages using the Packages tab in the bottom right window in RStudio.  The tab lists packages that are already installed, either at the system or user level.  Ones that are checked are loaded for use.
+
+Or you can install packages with a command:
+
+```{r, eval=FALSE}
+install.packages("tidyverse")
+```
+
+Note that `tidyverse` is a composite package that will install multiple component packages and their dependencies.  You'll get a lot of messages as the installation happens.
+
+CRAN (Comprehensive R Archive Network) is the name of the package repository.  There are [mirrors](https://cran.r-project.org/mirrors.html) around the world.
+
+If you have trouble or get errors when trying to install a package, you might need to specify the repository mirror to download from:
+
+```{r, eval=FALSE}
+install.packages("tidyverse", repos="http://cran.wustl.edu/")
+```
+
+After you install a package, you have to load it with the `library` function to actually use it.
+
+```{r}
+library(tidyverse)
+```
+
+A note on `tidyverse`: when you install `tidyverse`, it installs more packages than are loaded with `library(tidyerse)`.  One example is `lubridate`.  It was installed with `tidyverse`, but you'll have to load it separately to use it: `library(lubridate)`.
+
+A few more packages to install, that we might use later:
+
+```{r}
+install.packages(c("psych", "DT", "data.table"))
+```
