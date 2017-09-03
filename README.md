@@ -1,5 +1,7 @@
 # Intro to R Workshop Materials
 
+NOTE: materials currently under revisions/creation.  They'll be up by September 7th.
+
 # Code Files
 
 ## HTML
