@@ -1,0 +1,187 @@
+---
+title: "Exercises Part 5: Visualization"
+author: "Christina Maimone"
+date: "`r Sys.Date()`"
+output: html_document
+params:
+    answers: TRUE
+---
+
+
+```{r, echo=FALSE, eval=TRUE}
+answers<-params$answers
+```
+
+```{r global_options, echo = FALSE, include = FALSE}
+knitr::opts_chunk$set(echo=TRUE, warning = FALSE, message = FALSE,
+                      cache = FALSE, tidy = FALSE, size = "small")
+#knitr::opts_knit$set(root.dir=)
+```
+
+# Setup
+
+```{r}
+library(tidyverse)
+library(gapminder)
+data(gapminder)
+```
+
+---
+
+# Exercise: Make a Line Plot
+
+Using the `gapminder` data, make a line plot showing the population of Afghanistan over time.  Do this first with base R plotting and then with `ggplot`.  Hint: for base R, look at the help for `plot.default` and the `type` parameter.  For `ggplot`, use the cheat sheet to find the correct geom to use.
+
+Make sure to clean up the x and y labels, and give your plot a title.
+
+```{asis, echo=answers, eval=answers}
+### Answer
+```
+
+```{r, echo=answers, eval=answers}
+# base R
+plot(x=gapminder$year[gapminder$country=="Afghanistan"], 
+     y=gapminder$pop[gapminder$country=="Afghanistan"],
+     type="l",
+     xlab="Year",
+     ylab="Population",
+     main="Afghanistan Population")
+
+# ggplot
+filter(gapminder, country=="Afghanistan") %>%
+ggplot(aes(y=pop, x=year)) +
+  geom_line() + 
+  xlab("Year") + 
+  ylab("Population") + 
+  ggtitle("Afghanistan Population")
+```
+
+
+# Exercise: Histogram
+
+Make a histogram of life expectancies in 2007.  Make the historgram with each of 5, 10, 20, and 40 bins.  Use either base R or `ggplot` functions (or do both).  Does the number of bins change your interpretation of the data at all?  Do you see different trends?
+
+```{asis, echo=answers, eval=answers}
+### Answer
+```
+
+```{r, echo=answers, eval=answers}
+## repeat, changing the number of breaks
+hist(gapminder$lifeExp[gapminder$year==2007], breaks=5)
+
+# or, with ggplot
+filter(gapminder, year==2007) %>%
+  ggplot(aes(lifeExp)) + 
+  geom_histogram(bins=5)
+```
+
+```{asis, echo=answers, eval=answers}
+With more bins, ie becomes more obvious that there are at least two sets of countries in the data.  There's a cluster of high life expectancy, then a large spread of countries with lower life expectancy.
+```
+
+
+
+# `ggplot` Exercise: Change Colors
+
+Using the `gapminder` data, repeat the plot we made together of life expectancy vs. GDP per capita, with points colored by continent.  Instead of using the default colors, use the palette below.  Hint: use `scale_colour_manual` to set the colors.
+
+```{r}
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", 
+               "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+```
+
+
+```{asis, echo=answers, eval=answers}
+### Answer
+```
+
+```{r, echo=answers, eval=answers}
+filter(gapminder, year==2002) %>% 
+  ggplot(aes(x=gdpPercap, y=lifeExp, color=continent)) + 
+  geom_point() + 
+  scale_x_log10() + 
+  scale_colour_manual(values=cbPalette)
+```
+
+```{asis, echo=answers, eval=answers}
+The example palette above is a color-blind friendly palette from http://jfly.iam.u-tokyo.ac.jp/color/ (using color-blind friendly colors for publications is a good idea even if you yourself aren't color blind).
+```
+
+
+
+# `ggplot` Exercise: Multiple lines and facets
+
+Using the `gapminder` data, create a plot to show the change in life expectancy over time.  Plot one line for each country.  Color the lines by continent.  Include decent labels on your plot.
+
+Then add the points for each observation to the plot as well (so that you have a line with points on it).  Hint: you can use multiple geoms in the same plot.
+
+Then split out the countries by continent, so there is one plot per continent.  Challenge: Remove the legend on this final plot, as it is redundant with the plot labeling.  Hint: look at `legend.position` argument to the `theme` function.
+
+```{asis, echo=answers, eval=answers}
+### Answer
+```
+
+```{r, echo=answers, eval=answers}
+ggplot(gapminder, aes(y=lifeExp, 
+                      x=year, 
+                      by=country, 
+                      color=continent)) + 
+  geom_line() + 
+  xlab("Year") + 
+  ylab("Life Expectancy")
+ggplot(gapminder, aes(y=lifeExp, 
+                      x=year, 
+                      by=country, 
+                      color=continent)) + 
+  geom_line() + 
+  xlab("Year") + 
+  ylab("Life Expectancy") + 
+  geom_point()
+ggplot(gapminder, aes(y=lifeExp, 
+                      x=year, 
+                      by=country, 
+                      color=continent)) + 
+  geom_line() + 
+  xlab("Year") + 
+  ylab("Life Expectancy") + 
+  geom_point() + 
+  facet_grid(continent ~ .) + 
+  theme(legend.position="none")
+```
+
+
+# `ggplot` Challenge Exercise: Add a Trend Line
+
+Create a scatter plot of life expectancy vs. log of population for the year 2007.  Color points by continent.  Add a linear regression line for each continent (hint: `method=lm` for linear regression).
+
+Then redo the plot with a single overall trend line (don't worry about coloring points by continent anymore).  What do you notice?
+
+```{asis, echo=answers, eval=answers}
+### Answer
+```
+
+```{r, eval=answers, echo=answers}
+filter(gapminder, year==2007) %>%
+ggplot(aes(y=lifeExp, x=pop, color=continent)) + 
+  geom_point() + 
+  xlab("Population") + 
+  ylab("Life Expectancy") + 
+  geom_smooth(method=lm) + 
+  scale_x_log10() 
+filter(gapminder, year==2007) %>%
+ggplot(aes(y=lifeExp, x=pop)) + 
+  geom_point() + 
+  xlab("Population") + 
+  ylab("Life Expectancy") + 
+  geom_smooth(method=lm) + 
+  scale_x_log10()
+```
+
+```{asis, echo=answers, eval=answers}
+The warning message you get for the first plot is OK.  It's the result of there only being 2 Oceania countries.
+
+Note that overall, there is a positive trend, but for several continents, the trend within the continent is negative.  You might want to look up [Simpson's Paradox](https://en.wikipedia.org/wiki/Simpson%27s_paradox).
+```
+
+
+

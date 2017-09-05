@@ -1,0 +1,110 @@
+---
+title: "Probability"
+author: "Christina Maimone"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+params:
+  notes: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+notes<-params$notes
+```
+
+
+# Probability Distributions
+
+R knows about a lot of probability distributions:
+
+```{r, eval=FALSE}
+help(Distributions)
+```
+
+For each distribution, there are 4 function: dxxx, pxxx, qxxx and rxxx, where xxx is the name for the distribution. Take the normal distribution as an example.
+
+By default, the normal distribution functions use the distribution with mean=0 and standard deviation (sd)=1.  You can change these for different variations on the distribution.
+
+## `dnorm`
+
+First, there is a function to get the density of the probability distribution (the [PDF](https://en.wikipedia.org/wiki/Probability_density_function)):
+
+```{r}
+vals<-seq(-4, 4, .2) # this makes a vector with a sequence of numbers from -4 to 4 in it
+data.frame(vals=vals, pdf=dnorm(vals))
+```
+
+Looking at the data, the pdf peaks at 0 (the mean), and decreases symetrically away from 0. Plot this:
+
+```{r}
+plot(dnorm(vals) ~ vals, type="l")
+```
+
+It looks like what you expect for the normal distribution.  `dnorm` is mostly commonly used for drawing the distribution -- you don't usually need to compute the value of the PDF at a specific point otherwise.
+
+## `pnorm`
+
+`pnorm` tells us how likely it is (the probability) that a random draw from the distribution would be a value less than or equal to the number supplied -- this is the area under the PDF curve.  The return value will range between 0 and 1:
+
+```{r}
+vals<-seq(-3,3,.2)
+data.frame(vals=vals, prob=pnorm(vals))
+```
+
+It's always increasing (since as you move right on the number line you're always increasing the probability that a random draw would be less than or equal to the value), and `pnorm(0)` is 0.5 -- since there's a 50/50 chance that a random draw would be to the left of the mean.  If you plot the results of `pnorm`, you get the [CDF](https://en.wikipedia.org/wiki/Cumulative_distribution_function):
+
+```{r}
+plot(pnorm(vals)~vals, type="l")
+```
+
+You would use pnorm when looking up the probability of getting a particular value (such as a test statistic that follows a normal distribution).  You can get the probability of a random draw being to the right of the specified value instead with `lower.tail`:
+
+```{r, results="hold"}
+pnorm(1.6)
+pnorm(1.6, lower.tail=FALSE)
+```
+
+## `qnorm`
+
+`qnorm` is the opposite of `pnorm` -- it tells you what value you need such that you have the supplied probability of a random draw being less than or equal to (to the left of) that value from the distribution.  For example, if you want to know what value you need such that there's a 95% chance that a random draw would be less than or equal to the number:
+
+```{r}
+qnorm(0.95)
+```
+
+You need a value of 1.64.  Random draws from a normal distribution with mean=0 and standard deviation=1 will be less than or equal to 1.64 95% of the time.
+
+The value you supply to `qnorm` must be between 0 and 1.  There's no limit on the range of the return value.
+
+Again, `pnorm` and `qnorm` are opposites:
+
+```{r, results='hold'}
+qnorm(pnorm(2))
+pnorm(qnorm(.8))
+```
+
+## `rnorm`
+
+The last function is to generate random draws from the distribution.  Tell it how many random draws you want:
+
+```{r}
+rnorm(10)
+```
+
+If you want to make sure we get the same sequence of random numbers each time (or as someone else), you can set the seed with any integer value:
+
+```{r}
+set.seed(12345)
+rnorm(10)
+```
+
+This is useful for running simulations when you need to sample from a distribution.
+
+

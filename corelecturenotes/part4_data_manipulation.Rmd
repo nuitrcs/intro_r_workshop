@@ -1,0 +1,500 @@
+---
+title: "Intro to R: Data Manipulation and Exploration"
+author: "Christina Maimone"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    toc_depth: 3
+params:
+  notes: no
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=FALSE}
+notes<-params$notes
+```
+
+
+We're going to do the same set of data manipulation tasks, first with base R functions, then with `dplyr` functions.  Both are good ways to work with your data.  We're showing both because you'll see code that uses both.  Also, you can get a sense of the way each works and see what makes the most sense to you to use in the future.
+
+# Data
+
+We're going to work with data on baby names from the Social Security Administration.
+
+```{r}
+babynames<-read.csv("https://goo.gl/akxxYv")
+head(babynames)
+```
+
+And let's make sure we have `tidyverse` loaded:
+
+```{r}
+library(tidyverse)
+```
+
+
+# Base R
+
+## Selecting Rows and Columns
+
+Let's select the observations for the name Mary before 1900, keeping all columns except `prop`:
+
+There are a few ways we might specify this:
+
+```{r, eval=FALSE}
+babynames[babynames$name=='Mary' & babynames$year < 1900,-5]
+babynames[babynames$name=='Mary' & babynames$year < 1900, 1:4]
+babynames[babynames$name=='Mary' & babynames$year < 1900, c("year", "sex", "name","n")]
+```
+
+
+## Making New Variables
+
+Make a new variable that is the length (number of letters) of the name.  `name` is a factor, so make a character vector first.
+
+```{r, eval=FALSE}
+babynames$length <- nchar(as.character(babynames$name))
+```
+
+
+## Grouping and Summarizing
+
+Summarizing variables may be useful without grouping them, but grouping isn't of much good without them computing some summary measure on the groups.  First, some summarizing.  Yearly average proportion of girls with the name Mary:
+
+```{r, eval=FALSE}
+mean(babynames[babynames$name=="Mary" & babynames$sex=="F","prop"])
+```
+
+Now do this for all names and sexes using grouping (but realize years with less than 5 babies for the name are missing, so measures are skewed).  Use the `aggregate` function to group by multiple columns.  It wants to know what columns/data you'll be computing a measure on, how to separate that data into groups, and what function to compute for each group.
+
+```{r, eval=FALSE}
+aggregate(babynames$prop, by=list(babynames$name, babynames$sex), FUN=mean)
+```
+
+when grouping by a single variable, you can use `tapply` instead.  Similar set of criteria: what data do you want to compute something on, what to group by, and function to use.  Let's get total count of babies by year.
+
+```{r, eval=FALSE}
+tapply(babynames$n, babynames$year, sum)
+```
+
+Let's make a new data set with the proportion of names that start with each letter by `sex` and `year`.  
+
+```{r}
+initial_props <- aggregate(babynames[,c("n","prop")], 
+                           by=list(babynames$year, babynames$sex, substr(babynames$name, 1, 1)), sum)
+head(initial_props)
+names(initial_props)<- c("year", "sex", "initial", "count", "totalprop")
+```
+
+Above we set the names explicitly because `aggregate` doesn't keep nice names.
+
+## Sorting
+
+We can sort individual vectors with `sort`, or get ordering information from an individual vector that we can then apply to sort a `data.frame`.
+
+Sort 10 random numbers:
+
+```{r}
+sort(rnorm(10))
+sort(rnorm(10), decreasing=TRUE)
+```
+
+Sorting a whole `data.frame` by a column.  First let's just grab a specific year from `intitial_props`:
+
+```{r}
+initial_props_2000 <- initial_props[initial_props$year==2000,]
+```
+
+`order` retruns the indexes of values in sorted order, so we can use it to order rows in a `data.frame`:
+
+```{r}
+order(initial_props_2000$count)
+initial_props_2000[order(initial_props_2000$count, decreasing = TRUE),]
+```
+
+
+# `dplyr`
+
+The `dplyr` package uses a new type of command: `%>%`, which comes from the package [`magrittr`](https://cran.r-project.org/web/packages/magrittr/vignettes/magrittr.html).  This is like a pipe `|` from the command line environment of a computer.  It takes the output of the thing on the left of the pipe and sends it as the first parameter to the command on the right of the pipe.  You can string multiple commands together this way.  `dplyr` has a variety of "verbs" -- ways to manipulate data.  For example, `select`, `filter`, `arrange`, `mutate`, and `summarize`.  The first argument to each of these functions is a `data.frame`.
+
+You don't have to use `dplyr`, but you should know it exists and recognize commands in it.  You can use `%>%` with functions not in the `tidyverse` too, but this can sometimes get tricky if the first argument isn't what you want to pipe in.
+
+Know that `dplyr` functions always operate on a `data.frame` and return a `data.frame` (or a `tibble`, which is a `tidyverse` `data.frame` that attempts to fix some of the annoyances with standard `data.frame`s).
+
+[`dplyr` cheat sheet](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf)
+
+## Prelim: `%>%`
+
+To see how the `%>%` works:
+
+```{r}
+babynames %>% names()
+```
+
+`names` expects as the first argument an R object, so this works.  
+
+
+## Selecting Rows and Columns
+
+In `dplyr` `filter` let's you select rows based on criteria, and `select` let's you choose which columns to keep.  Let's select the observations for the name Mary before 1900, keeping all columns except `prop`:
+
+Note that in `dplyr` functions, you can use the column names without the `data.frame` name within the functions.
+
+```{r}
+filter(babynames, name=='Mary' & year < 1900) %>% 
+  select(-prop)
+```
+
+You will often see a string of `dplyr` commands start with just the name of the data set, like:
+
+```{r, eval=FALSE}
+babynames %>%
+  filter(name=='Mary' & year < 1900) %>%
+  select(-prop)
+```
+
+You can split the series of `dplyr` commands across multiple lines, as long as where you end a line doesn't complete an expression (otherwise R will evaluate, because it doesn't expect more).  So the above examples work, and you could also split a line within a ().  But the following won't work:
+
+```{r, eval=FALSE}
+filter(babynames, name=='Mary' & year < 1900) 
+%>% select(-prop)
+```
+
+The first line above is a complete command by itself, and the second line will then give an error because you can't start with `%>%`.  
+
+## Make new variables
+
+The `dplyr mutate` function will make a new variable (column on the `data.frame`).  The new variable is ephemeral unless you save the result back to the same object or make a new one.  You can reference variables created with mutate in later `dplyr` functions in the same command string though.   
+
+Make a new variable that is the length (number of letters) of the name.  `name` is a factor, so make a character vector first.
+
+```{r}
+babynames <- mutate(babynames, length=nchar(as.character(name)))
+```
+
+Note that with `dplyr` we are saving back the entire `data.frame` because that is what `mutate` returns.  Above, we're just creating a new column on the `data.frame`.  
+
+
+## Grouping and Summarizing
+
+Get yearly average proportion of girls with the name Mary - we'll use `summarize`:
+
+```{r}
+babynames %>% 
+  filter(name=="Mary" & sex=="F") %>%
+  summarize(meanprop=mean(prop))
+```
+
+You can easily add additional functions to summarize by too:
+
+```{r}
+babynames %>% 
+  filter(name=="Mary" & sex=="F") %>%
+  summarize(meanprop=mean(prop),
+            medianprop=median(prop),
+            maxprop=max(prop),
+            minprop=min(prop))
+```
+
+Now do this for all names and sexes using `group_by` (but realize years with less than 5 babies for the name are missing, so measures are skewed). 
+
+```{r}
+babynames %>%
+  group_by(name, sex) %>%
+  summarize(meanprop=mean(prop),
+            medianprop=median(prop))
+```
+
+Let's make a new data set with the proportion of names that start with each letter by `sex` and `year`.  
+
+```{r}
+initial_props <- babynames %>%
+  mutate(initial=substr(name, 1, 1)) %>%
+  group_by(year, sex, initial) %>% 
+  summarize(count=sum(n), totalprop=sum(prop)) %>%
+  ungroup()
+```
+
+`ungroup` at the end just removes the grouping information that is stored with the `tibble`, which is important since we're making a new object and not just printing some result.
+
+## Sorting
+
+Use `arrange`.  You can change to descending order with the `desc` function on the column.  
+
+```{r}
+initial_props %>%
+  filter(year==2000) %>%
+  arrange(desc(count))
+```
+
+You can also sort by more than one column:
+
+```{r}
+initial_props %>%
+  arrange(year, desc(count))
+```
+
+
+
+
+
+# Exploring Data: an example
+
+Here's an example of a few common data manipulation, exploration, and cleaning tasks.  This isn't comprehensive, but it will give you a sense of what it's like working with R on real data. 
+
+We'll use the `schooldata data.frame` loaded in a previous section  If you don't have it loaded:
+
+```{r}
+schooldata <- read_csv("https://goo.gl/f4UhMX") ## school data will be a tibble
+```
+
+We'll use both base R and `dplyr` methods.
+
+## Examine Data
+
+```{r}
+schooldata  # prints dimensions too
+names(schooldata)
+```
+
+```{r, eval=FALSE}
+View(schooldata)
+```
+
+
+### What's our unit of observation?
+
+There are multiple rows per student:
+
+```{r}
+table(schooldata$studentid)
+```
+
+Or, another way to check:
+
+```{r}
+nrow(schooldata)
+length(unique(schooldata$studentid))
+```
+
+Are we unique in student-course?
+
+```{r}
+nrow(unique(schooldata[,c("studentid","courseid")]))
+```
+
+Hmm... There are 3 duplicates (or one a bunch of times)!  Let's find them.
+
+```{r}
+duplicated(schooldata[,c("studentid", "courseid")])
+schooldata[duplicated(schooldata[,c("studentid", "courseid")]),]
+```
+
+But we want to see both rows that had a duplicate value so we can see how they are different.  There's an option to duplicated that will get us the first index instead of the last (which will work only because we know that there are just pairs).
+
+```{r}
+alldups <- duplicated(schooldata[,c("studentid", "courseid")]) | 
+  duplicated(schooldata[,c("studentid", "courseid")], fromLast=TRUE)
+schooldata[alldups,]
+```
+
+Looks like there are different grades for the same student.  We'll decide what to do about that later.  But first, let's come up with a more general solution for finding the duplicates that doesn't require there to only be pairs: create a new variable that is a combination of student id and course id.  Then use that to find duplicates and select.
+
+```{r}
+schooldata$student_course <- paste(schooldata$studentid, schooldata$courseid)
+dups <- schooldata$student_course[duplicated(schooldata$student_course)]
+schooldata[schooldata$student_course %in% dups,]
+```
+
+With `dplyr`, it's a bit easier.
+
+```{r}
+schooldata %>%
+  group_by(studentid, courseid) %>% 
+  filter(n() > 1)  
+```
+
+To view the full rows, we can add `View()` at the end:
+
+```{r, eval=FALSE}
+schooldata %>%
+  group_by(studentid, courseid) %>% 
+  filter(n() > 1) %>% 
+  View()
+```
+
+## Remove duplicates
+
+Let's be generous and remove the observation with the lower grade.  One way we can do this is sort the data by grade, and then remove the first duplicate
+
+```{r}
+schooldata<-schooldata[order(schooldata$grade),] # ascending by grade
+dups <- duplicated(schooldata$student_course, fromLast = TRUE) #marks first occurrence as the duplicate
+schooldata<-schooldata[!dups,]
+```
+
+With `dplyr`, we could do
+
+```{r, eval=FALSE}
+schooldata <- schooldata %>%
+  group_by(studentid, courseid) %>%
+  arrange(desc(grade)) %>% #grade descending within group
+  slice(1) %>% # take first observation from each group
+  ungroup()
+```
+
+
+## Data Cleanup
+
+In `schooldata` the instructors' names were split into multiple columns, and we have a date column.  Make these easier to work with by combining the instructor names into a single column and making the date into a `Date` type.
+
+### Names
+
+Question: Why might we want to combine instructor names?
+
+```{r}
+schooldata$instructorname <- paste(schooldata$instructorfirst, schooldata$instructorlast)
+```
+
+The equivalent command using `dplyr` instead is:
+
+```{r, eval=FALSE}
+schooldata<-mutate(schooldata, instructorname=paste(instructorfirst, instructorlast))
+```
+
+Now let's get counts by instructor:
+
+```{r}
+sort(table(schooldata$instructorname))
+```
+
+Hmm...for instructors, it looks like there is as "TBD" that should perhaps be missing.  You could read in the data again specifying "TBD" as a missing string, or recode the value.  You could fix the individual first and last name columns, or just the new combined one created above.  Just fix the combined one for now.
+
+```{r}
+schooldata$instructorname[schooldata$instructorname=="TBD TBD"]<-NA
+```
+
+### Dates
+
+Currently the startdate variable is a character vector:
+
+```{r}
+typeof(schooldata$startdate)
+```
+
+This isn't very easy to work with.  Make the date column a `Date` type.  
+
+```{r}
+schooldata$startdate<-as.Date(schooldata$startdate)
+```
+
+Converting to a date will make plotting easier, and you can do arithmatic and logic with the date if needed.
+
+The above worked because the date was nicely formatted in YYYY-MM-DD format.  What about other formats of dates?  The `lubridate` package makes working with them easy. It has a series of functions like `ymd` and `dmy` that specify the order that our date fields are in, and then it figures out how to parse them correctly.  It can also handle time.  In this case, we could use `ymd`:
+
+```{r}
+library(lubridate)
+schooldata$startdate<-ymd(schooldata$startdate)
+```
+
+
+## Summarizing
+
+One useful function is `summary`, which can apply to a data frame or vector:
+
+```{r}
+summary(schooldata)
+summary(schooldata$age)
+```
+
+There are also summary or describe methods in other packages that output the stats most relevant to those fields.  See psych and Hmisc packages for example.
+
+Consider the summary of `age`.  The summary of the age in this case isn't very helpful because there are multiple observations for each student.  Use `unique` to get a summary of age with just one observation per student.  
+
+```{r}
+summary(unique(schooldata[,c("studentid", "age")])$age)
+```
+
+or with `dplyr`, one way:
+
+```{r}
+schooldata %>%
+  select(studentid, age) %>% 
+  distinct() %>% 
+  select(age) %>% 
+  summary()
+```
+
+Taking just one observation per student gives a slightly different result.  
+
+
+## Grouping
+
+Let's start to look at measures for different types of groups.  How does the data break down by different dimensions, like class, student, gender, etc.
+
+How can you get average grade by class?
+
+The `tapply` function is an option.  It applies a function (`mean` below) to a vector (`schooldata$grade` below) based on the values of another vector (`schooldata$title` below):
+
+```{r}
+tapply(schooldata$grade, schooldata$title, mean)
+```
+
+Sort the result:
+
+```{r}
+sort(tapply(schooldata$grade, schooldata$title, mean), decreasing=TRUE)
+```
+
+or we could use `dplyr`:
+
+```{r}
+schooldata %>%
+  group_by(title) %>% 
+  summarize(avg_grade=mean(grade)) %>% 
+  arrange(desc(avg_grade)) 
+```
+
+What else can we look for? What about average grade by student?
+
+```{r}
+sort(tapply(schooldata$grade, schooldata$studentid, mean), decreasing=TRUE)
+```
+
+or
+
+```{r}
+schooldata %>%
+  group_by(studentid) %>% 
+  summarize(avg_grade=mean(grade)) %>% 
+  arrange(desc(avg_grade))
+```
+
+
+Or how many classes did each student take?  What does the distribution look like?
+
+```{r}
+schooldata %>%
+  group_by(studentid) %>%
+  summarize(nclasses = n_distinct(courseid)) %>% # gets to one value for each student
+  select(nclasses) %>%
+  summary() # what does the distribution across students look like?
+```
+
+or, make a table of the values 
+
+```{r}
+schooldata %>%
+  group_by(studentid) %>%
+  summarize(nclasses = n_distinct(courseid)) %>% 
+  group_by(nclasses) %>%
+  summarize(numstudents=n())
+```
+
+

@@ -11,13 +11,6 @@ params:
   notes: no
 ---
 
-<!--
-To Knit the file without toc for printing
-rmarkdown::render('basics_and_datatypes.Rmd',
-                  output_options=list(toc=FALSE,toc_float=FALSE),
-                  output_file = 'basics_and_datatypes_notes.html',
-                  params = list(notes=TRUE))
---->
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -68,10 +61,23 @@ sin(1)
 ```{r}
 1 < 2
 TRUE == FALSE
-'a' == "Boy"
+'a' != "Boy" # not equal
 ```
 
 Note that character vectors/strings can use single or double quotes.
+
+## Logical Operators
+
+`&` is and, and `|` is or, and `!` is not: 
+
+```{r}
+TRUE & FALSE
+!TRUE & FALSE
+TRUE | FALSE
+(2 > 1) & (3 > 2)
+```
+
+You use these to join together conditions.
 
 ## Variables
 
@@ -187,6 +193,13 @@ Or exclude values with a negative sign:
 ```{r}
 x[-1]
 ```
+
+Elements are returned in the order that the indices are supplied:
+
+```{r}
+x[c(5,1)]
+```
+
 
 You can use a vector of integers or booleans to select from a vector as well:
 
@@ -409,7 +422,7 @@ You can load this file later with the `load` function
 load("20170112.RData")
 ```
 
-Note that `load` will overwrite any objects already in your workspace that have the same names as objects in the file you are loading.  I don't recommend using `save` and `load`.  It's generally better to save specific data files instead.
+Note that `load` will overwrite any objects already in your workspace that have the same names as objects in the file you are loading.  I don't recommend using `save` and `load` for final or datasets.  For that, it's generally better to save specific data files in common formats (like CSV) instead.  Use `save` and `load` to save data at intermediate stages of analysis -- when you wouldn't be passing the data outside of R.
 
 
 # Packages
@@ -438,10 +451,10 @@ library(tidyverse)
 
 A note on `tidyverse`: when you install `tidyverse`, it installs more packages than are loaded with `library(tidyerse)`.  One example is `lubridate`.  It was installed with `tidyverse`, but you'll have to load it separately to use it: `library(lubridate)`.
 
-A few more packages to install, that we might use later:
+Other packages, that we might use later:
 
-```{r}
-install.packages(c("psych", "DT", "data.table"))
+```{r, eval=FALSE}
+install.packages(c("gapminder"))
 ```
 
 

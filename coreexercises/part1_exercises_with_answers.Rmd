@@ -1,21 +1,11 @@
 ---
-title: "Exercises Part 1"
+title: "Exercises Part 1: Vectors and R Basics"
 author: "Christina Maimone"
 date: "`r Sys.Date()`"
 output: html_document
 params:
     answers: TRUE
 ---
-
-<!--
-To Knit the file with and without answers
-rmarkdown::render('part1_exercises_with_answers.Rmd',
-                  output_file = 'part1_exercises_with_answers.html',
-                  params = list(answers=TRUE))
-rmarkdown::render('part1_exercises_with_answers.Rmd',
-                  output_file = 'part1_exercises.html',
-                  params = list(answers=FALSE))
---->
 
 ```{r, echo=FALSE, eval=TRUE}
 answers<-params$answers
@@ -24,7 +14,6 @@ answers<-params$answers
 ```{r global_options, echo = FALSE, include = FALSE}
 knitr::opts_chunk$set(echo=TRUE, warning = FALSE, message = FALSE,
                       cache = FALSE, tidy = FALSE, size = "small")
-#knitr::opts_knit$set(root.dir=)
 ```
 
 # Exercise: Make a vector
@@ -33,15 +22,20 @@ Start by making a vector, named `x`, with the numbers 1 through 26.
 
 Multiply the vector by 2.
 
-Give the resulting vector names A through Z.  Hint: see the documentation page for `names` for an example.
+Give the resulting vector names A through Z.  Hint: see the documentation page for `names` for an example.  Hint 2: there is a built in vector called `LETTERS`
 
-Hint: there is a built in vector called `LETTERS`
+Print the vector out with the elements in reverse order.  Hint: you don't need a function to do this; you can do it based on how you specify the indices to select from the vector.
 
-```{r, echo=answers}
+```{asis, echo=answers, eval=answers}
+### Answer
+```
+
+```{r, echo=answers, eval=answers}
 x <- 1:26
 x <- x * 2
 names(x) <- LETTERS
 x
+x[26:1]
 ```
 
 # Exercise: Manipulating Vectors
@@ -52,23 +46,34 @@ Then select every other element, starting with the second, of the vector.  See t
 
 Take the mean of the log of the values in `x`.  Exclude missing values.
 
-```{r, echo=answers}
+Make a second vector `badvals` that has the values 4, 6, 8, and 10 in it.  Use it to select the values of `x` that aren't in `badvals`.  Hint: remember what the not operator is?  Put it at the beginning of the expression inside the `[]`.  You may also want to look up the help page for `match` if you don't remember how to tell if values are in another vector.  
+
+```{asis, echo=answers, eval=answers}
+### Answer
+```
+
+```{r, echo=answers, eval=answers}
 x[c(10, 13)]<-NA
 x
 ```
 
-```{r, echo=answers}
+```{r, echo=answers, eval=answers}
 x[seq(2, length(x), 2)]
 ```
 
-```{r, echo=answers}
+```{r, echo=answers, eval=answers}
 mean(log(x), na.rm=TRUE)
+```
+
+```{r, echo=answers, eval=answers}
+badvals <- c(4, 6, 8, 10)
+x[!x %in% badvals]
 ```
 
 
 # Exercise: Looking up Values
 
-The code below generates a vector with randomly selected letters.  Check to see if your first initial is in the vector.  Which index positions is it at?
+The code below generates a vector with randomly selected (lowercase) letters.  Check to see if your first initial is in the vector.  Which index positions is it at?
 
 Make a table of the frequencies of the letters in `random_letters`.  Sort the table with the `sort` function.
 
@@ -79,18 +84,26 @@ random_letters<-sample(letters, 50, replace=TRUE)
 ```
 
 
-```{asis, echo=answers}
+```{asis, echo=answers, eval=answers}
+### Answer
+```
+
+```{asis, echo=answers, eval=answers}
 Note that your output may be different than what's below because of the random selection of values.
 ```
 
 
-```{r, echo=answers}
-'c' %in% random_letters
-which(random_letters == 'c')
+```{r, echo=answers, eval=answers}
+'c' %in% random_letters # test for inclusion
+which(random_letters == 'c') # get actual position
 sort(table(random_letters))
 ```
 
-```{r}
+```{asis, echo=answers, eval=answers}
+`which` gets you all positions in the vector. `match` would only give you the index of the first match
+```
+
+```{r, echo=answers, eval=answers}
 # save the table results
 table_results <- sort(table(random_letters), decreasing=TRUE)
 
@@ -103,7 +116,7 @@ random_letters[random_letters == freq_letter] <- '*'
 random_letters
 ```
 
-```{asis, echo=answers}
+```{asis, echo=answers, eval=answers}
 If you searched the internet for an answer, you may have been able to come up with other solutions.
 ```
 
@@ -114,13 +127,17 @@ If you searched the internet for an answer, you may have been able to come up wi
 Remove the `x` vector you created above from your workspace.  Check to make sure it's gone.
 
 
-```{r, echo=answers}
+```{asis, echo=answers, eval=answers}
+### Answer
+```
+
+```{r, echo=answers, eval=answers}
 rm(x)
 ls() #list all objects, check by looking
 "x" %in% ls() # is "x" in the output?
 ```
 
-```{asis, echo=answers}
+```{asis, echo=answers, eval=answers}
 You can also see the list of objects in the Environment tab in the upper right window in RStudio. 
 ```
 
@@ -130,16 +147,20 @@ You can also see the list of objects in the Environment tab in the upper right w
 Install the package fortunes.  Look at the package documentation to figure out what it does and call the main method of the package.
 
 
+```{asis, echo=answers, eval=answers}
+### Answer
+```
+
 ```{r, echo=answers, eval=FALSE}
 install.packages("fortunes")
 ```
 
-```{asis, echo=answers}
+```{asis, echo=answers, eval=answers}
 Or use the Packages tab in the bottom right in RStudio to install the package via the GUI.  To load a package with RStudio, check the box next to it in the Packages tab.  To read the documentation, click on the package name in the packages list.
 ```
 
 
-```{r, echo=answers}
+```{r, echo=answers, eval=answers}
 library(fortunes) # don't forget to load it!
 fortune()
 ```
@@ -158,7 +179,11 @@ Load the `stringr` package.  Using a function from the `stringr` package (look a
 Part 3 (advanced): Find a function in base R (not the `stringr` package) that also splits strings (you may need to use Google).  Compare the documentation to the function you found above.  What's the difference? Hint: try supplying a vector with different split patterns to each function and see what output you get. 
 
 
-```{r, echo=answers}
+```{asis, echo=answers, eval=answers}
+### Answer
+```
+
+```{r, echo=answers, eval=answers}
 age<-25
 paste("My age is", age)
 allletters<-paste(LETTERS, collapse = "-")
@@ -170,12 +195,12 @@ typeof(split_letters)
 split_letters <- split_letters[[1]]
 ```
 
-```{asis, echo=answers}
+```{asis, echo=answers, eval=answers}
 `strsplit` will also split strings.  Besides some small differences in the handling of regular expressions, the main difference from `str_split` from the `stringr` package is that `str_split` is vectorized over the input strings and patterns, while `strsplit` is only vectorized over the input strings.  This means you can use `str_split` to split the same string on multiple patterns, but to do that with `strsplit` you'd have to make multiple calls.  
 
 In most circumstances, you could use either function.  The `stringr` package incorporates some functions that exist in base R because it standardizes how you use a larger set of functions to manipulate strings.
 
-If you don't know what regular expressions are, take a look at ???.  If you work with text data, or really any large data files, they can save you tons of time reformatting files and data.
+If you don't know what regular expressions are, take a look at [Regular Expression in R](http://stat545.com/block022_regular-expression.html), from Gloria Li and Jenny Bryan, or the [Regular Expressions vignette](http://stringr.tidyverse.org/articles/regular-expressions.html) from `stringr` package to get started.  If you work with text data, or really any large data files, they can save you tons of time reformatting files and data.
 ```
 
 
@@ -185,8 +210,12 @@ If you don't know what regular expressions are, take a look at ???.  If you work
 Install the cowsay package.  Combine the output of the fortunes package (which you installed and used in an exercise above -- if not, go back and do that) with the functionality of the cowsay package.  Hint: you will also need to use the `paste` function with the `collapse` argument.  To keep pretty formatting, also use the `capture.output` function.
 
 
-```{asis, echo=answers}
-This exercise is based on a post by Ista Zahn: http://people.fas.harvard.edu/~izahn/posts/useless-but-fun-r-packages/
+```{asis, echo=answers, eval=answers}
+### Answer
+```
+
+```{asis, echo=answers, eval=answers}
+This exercise is based on a [blog post](http://people.fas.harvard.edu/~izahn/posts/useless-but-fun-r-packages/) by Ista Zahn.
 ```
 
 
@@ -194,7 +223,7 @@ This exercise is based on a post by Ista Zahn: http://people.fas.harvard.edu/~iz
 install.packages("cowsay")
 ```
 
-```{r, echo=answers}
+```{r, echo=answers, eval=answers}
 library(cowsay)
 
 say( # the cowsay command
@@ -207,15 +236,15 @@ say( # the cowsay command
   )
 ```
 
-```{asis, echo=answers}
+```{asis, echo=answers, eval=answers}
 Or drop `capture.output`:
 ```
 
-```{r, echo=answers}
+```{r, echo=answers, eval=answers}
 say(paste(fortune(), collapse="\n"))
 ```
 
-```{asis, echo=answers}
+```{asis, echo=answers, eval=answers}
 To understand the above better, try running the steps from the inside out to see what each stage feeds the next.
 ```
 
@@ -226,7 +255,7 @@ paste(capture.output(fortune()), collapse="\n")
 paste(fortune(), collapse="\n") # how is this different from above?
 ```
 
-```{asis, echo=answers}
+```{asis, echo=answers, eval=answers}
 `fortune()` returns a list.  `paste` will combine the elements together directly, but `capture.output` gets formatted output that includes spacing.
 ```
 
@@ -244,7 +273,11 @@ months<-sample(month.abb, size=40, replace=TRUE)
 ```
 
 
-```{r, echo=answers}
+```{asis, echo=answers, eval=answers}
+### Answer
+```
+
+```{r, echo=answers, eval=answers}
 months<-sample(month.abb, size=40, replace=TRUE)
 months<-factor(months)
 table(months) # months should be alphabetical
@@ -253,7 +286,39 @@ table(months) # months should be in order
 ```
 
 
+# Challenge Exercise: Dates
+
+Use R to calculate how many days you've been alive.  Then calculate it in terms of weeks.  Find out what day of the week you were born on.  You'll need to search the internet to figure out what functions to use, and use the R help as necessary.
+
+Hint: You might want to start with the help page for `Date`, the class of date objects in R.  Alternatively, take a look at the lubridate package.
+
+```{asis, echo=answers, eval=answers}
+### Answer
+```
+
+```{asis, echo=answers, eval=answers}
+If you were born on January 1, 1980:
+```
+
+```{r, echo=answers, eval=answers}
+Sys.Date()
+Sys.Date() - as.Date("1980-01-01")
+difftime(Sys.Date(), as.Date("1980-01-01"), units="weeks")
+weekdays(as.Date("1980-01-01"))
+```
 
 
+```{asis, echo=answers, eval=answers}
+Or, using the lubridate package, although it doesn't have an easy way to get name of the day of the week
+```
+
+```{r, echo=answers, eval=answers}
+library(lubridate)
+today()
+today() - ymd("1980-01-01")
+interval(ymd("1980-01-01"), today()) / weeks(1)
+wday(ymd("1980-01-01"))
+weekdays(ymd("1980-01-01")) ## weekdays isn't in lubridate
+```
 
 
