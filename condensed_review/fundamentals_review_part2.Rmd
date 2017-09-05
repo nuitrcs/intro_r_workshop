@@ -1,5 +1,5 @@
 ---
-title: "R Fundamental Review: Part 2"
+title: "R Fundamentals Review: Part 2"
 author: "Christina Maimone"
 date: "`r Sys.Date()`"
 output: 
@@ -10,14 +10,6 @@ output:
 params:
   notes: no
 ---
-
-<!--
-To Knit the file without toc for printing
-rmarkdown::render('condensed_review/fundamentals_review_part2.Rmd',
-                  output_options=list(toc=FALSE,toc_float=FALSE),
-                  output_file = 'condensed_review/review2_print.html',
-                  params = list(notes=TRUE))
---->
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -33,24 +25,10 @@ notes<-params$notes
 Data frames are the core data structure in R.  A data frame is a list of named vectors with the same length.  Columns are typically variables and rows are observations.  Different columns can have different types of data:
 
 ```{r}
-id<-1:20
-id
-color<-c(rep("red", 3), rep("green",10), rep("blue", 7))
-color
-score<-runif(20)
-score
-df<-data.frame(id, color, score)
-df
-```
-
-Instead of making individual objects first, we could do it all together:
-
-```{r}
 df<-data.frame(id=1:20, 
                color=c(rep("red", 3), rep("green",10), rep("blue", 7)),
                score=runif(20))
 ```
-
 
 Data frames can be indexed like matrices to retrieve the values.  
 
@@ -86,7 +64,6 @@ Instead of index numbers or names, you can also select values by using logical s
 df[df$color=="green",]
 df[df$score>.5,]
 ```
-
 
 You can assign names to the rows of a data frame as well as to the columns, and then use those names for indexing and selecting data.
 
@@ -216,6 +193,6 @@ A note on `tidyverse`: when you install `tidyverse`, it installs more packages t
 
 A few more packages to install, that we might use later:
 
-```{r}
-install.packages(c("psych", "DT", "data.table"))
+```{r, eval=FALSE}
+install.packages(c("gapminder"))
 ```

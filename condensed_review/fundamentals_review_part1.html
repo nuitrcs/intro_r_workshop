@@ -504,7 +504,7 @@ Christina Maimone <br> <a href="mailto:christina.maimone@northwestern.edu">chris
 
 <h2 id="purpose">Purpose</h2>
 <p>Quick review of material covered by DataCamp’s <a href="https://campus.datacamp.com/courses/free-introduction-to-r">Intro to R</a> course.</p>
-<p>Additional topics from <a href>Part 1</a> and <a href>Part 2</a> of the Research Computing workshop materials.</p>
+<p>Additional topics from <a href="https://nuitrcs.github.io/intro_r_workshop/corelecturenotes/part1_basics_and_datatypes.html">Part 1</a> and <a href="https://nuitrcs.github.io/intro_r_workshop/corelecturenotes/part2_data_structures.html">Part 2</a> of the Research Computing workshop materials.</p>
 </section>
 <section class="slide level1">
 
@@ -527,10 +527,25 @@ Let’s Start…
 <h2 id="comparisons">Comparisons</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="dv">1</span> &lt;<span class="st"> </span><span class="dv">2</span>
 <span class="ot">TRUE</span> ==<span class="st"> </span><span class="ot">FALSE</span>
-<span class="st">'a'</span> ==<span class="st"> &quot;Boy&quot;</span></code></pre></div>
+<span class="st">'a'</span> !=<span class="st"> &quot;Boy&quot;</span></code></pre></div>
 <aside class="notes">
 <p>double equals for testing for equality</p>
 Note that character vectors/strings can use single or double quotes.
+</aside>
+</section>
+<section class="slide level1">
+
+<h2 id="logical-operators">Logical Operators</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="ot">TRUE</span> &amp;<span class="st"> </span><span class="ot">FALSE</span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="ot">TRUE</span> |<span class="st"> </span><span class="ot">FALSE</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">!<span class="ot">TRUE</span> |<span class="st"> </span><span class="ot">FALSE</span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">(<span class="dv">2</span> &gt;<span class="st"> </span><span class="dv">1</span>) &amp;<span class="st"> </span>(<span class="dv">3</span> &gt;<span class="st"> </span><span class="dv">2</span>)</code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<aside class="notes">
+You can join comparisons together
 </aside>
 </section>
 <section class="slide level1">
@@ -582,7 +597,7 @@ x</code></pre></div>
 x</code></pre></div>
 <pre><code>## [1] &quot;1&quot;    &quot;cat&quot;  &quot;TRUE&quot;</code></pre>
 <aside class="notes">
-Vectors are also called arrays. You can create a vector with the <code>c()</code> function.
+Vectors are also called arrays. You can create a vector with the <code>c()</code> function. <code>c</code> stands for combine.
 </aside>
 </section>
 <section class="slide level1">
@@ -617,6 +632,23 @@ In some other languages, indices start with 0 instead.
 </section>
 <section class="slide level1">
 
+<h2 id="vectors-checking-values">Vectors: Checking Values</h2>
+<p>Check if a value is in a vector with <code>%in%</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="st">'c'</span> %in%<span class="st"> </span>x</code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+</section>
+<section class="slide level1">
+
+<h2 id="vectors-index-position">Vectors: Index Position</h2>
+<p>Or get the first index position of a value with <code>match()</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">match</span>(<span class="st">'b'</span>, x)</code></pre></div>
+<pre><code>## [1] 2</code></pre>
+<aside class="notes">
+Use the <code>which</code> function for all indices
+</aside>
+</section>
+<section class="slide level1">
+
 <h2 id="vectors-with-functions">Vectors with Functions</h2>
 <p>Some functions will apply to each element of a vector</p>
 <p>Others take a vector as a parameter</p>
@@ -634,7 +666,8 @@ In some other languages, indices start with 0 instead.
 
 <h2 id="factors">Factors</h2>
 <p>Categorical variables</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">colors&lt;-<span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;green&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">colors&lt;-<span class="kw">c</span>(<span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>, <span class="st">&quot;green&quot;</span>, 
+          <span class="st">&quot;red&quot;</span>, <span class="st">&quot;red&quot;</span>, <span class="st">&quot;blue&quot;</span>)
 colors&lt;-<span class="kw">factor</span>(colors)
 <span class="kw">levels</span>(colors)</code></pre></div>
 <pre><code>## [1] &quot;blue&quot;  &quot;green&quot; &quot;red&quot;</code></pre>
@@ -643,11 +676,8 @@ colors&lt;-<span class="kw">factor</span>(colors)
 
 <h2 id="factors-1">Factors</h2>
 <p>Be careful of assignments</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">colors[<span class="dv">1</span>]&lt;-<span class="st">&quot;pink&quot;</span></code></pre></div>
-<pre><code>## Warning in `[&lt;-.factor`(`*tmp*`,
-## 1, value = &quot;pink&quot;): invalid factor
-## level, NA generated</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">colors</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">colors[<span class="dv">1</span>]&lt;-<span class="st">&quot;pink&quot;</span>
+colors</code></pre></div>
 <pre><code>## [1] &lt;NA&gt;  blue  green red   red  
 ## [6] blue 
 ## Levels: blue green red</code></pre>
@@ -655,7 +685,9 @@ colors&lt;-<span class="kw">factor</span>(colors)
 <section class="slide level1">
 
 <p>To fix, add a level</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">colors&lt;-<span class="kw">factor</span>(colors, <span class="dt">levels=</span><span class="kw">c</span>(<span class="kw">levels</span>(colors), <span class="st">&quot;pink&quot;</span>)) 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">colors&lt;-<span class="kw">factor</span>(colors, 
+               <span class="dt">levels=</span><span class="kw">c</span>(<span class="kw">levels</span>(colors), 
+                        <span class="st">&quot;pink&quot;</span>)) 
 colors[<span class="dv">1</span>]&lt;-<span class="st">&quot;pink&quot;</span>  
 colors</code></pre></div>
 <pre><code>## [1] pink  blue  green red   red  
@@ -672,7 +704,7 @@ Special Types
 </section>
 <section class="slide level1">
 
-<h2 id="missing-data-na">Missing Data (<code>NA</code>)</h2>
+<h2 id="missing-data">Missing Data</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tmp&lt;-<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">5</span>, <span class="ot">NA</span>, <span class="dv">6</span>, <span class="ot">NA</span>)
 <span class="kw">is.na</span>(tmp)</code></pre></div>
 <pre><code>## [1] FALSE FALSE FALSE  TRUE FALSE
@@ -686,7 +718,7 @@ Why does this work? How can you sum logical values? This takes advantage of the 
 </section>
 <section class="slide level1">
 
-<h2 id="na-and-functions"><code>NA</code> and Functions</h2>
+<h2 id="na-and-functions">NA and Functions</h2>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(tmp)</code></pre></div>
 <pre><code>## [1] NA</code></pre>
 <p><code>mean</code> results in <code>NA</code>. It has an option to exclude missing:</p>
@@ -698,7 +730,7 @@ Different functions handle NA differently
 </section>
 <section class="slide level1">
 
-<h2 id="na-and-functions-1"><code>NA</code> and Functions</h2>
+<h2 id="na-and-functions-1">NA and Functions</h2>
 <p><code>table</code> behaves differently than <code>mean</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">tmp&lt;-<span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;A&quot;</span>, <span class="ot">NA</span>, <span class="st">&quot;B&quot;</span>, <span class="ot">NA</span>, <span class="st">&quot;A&quot;</span>)
 <span class="kw">table</span>(tmp)</code></pre></div>
@@ -709,7 +741,7 @@ Different functions handle NA differently
 </section>
 <section class="slide level1">
 
-<h2 id="na-in-tables"><code>NA</code> in Tables</h2>
+<h2 id="missing-in-tables">Missing in Tables</h2>
 <p>You have to tell <code>table</code> to include <code>NA</code>:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">table</span>(tmp, <span class="dt">useNA =</span> <span class="st">&quot;ifany&quot;</span>)</code></pre></div>
 <pre><code>## tmp
@@ -833,17 +865,9 @@ Using just a single index will get the element from the specified position, if t
 </section>
 <section class="slide level1">
 
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y[<span class="dv">1</span>:<span class="dv">2</span>,<span class="dv">3</span>:<span class="dv">4</span>]</code></pre></div>
-<pre><code>##      [,1] [,2]
-## [1,]    3    4
-## [2,]    8    9</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y[,<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">4</span>)]</code></pre></div>
-<pre><code>##      [,1] [,2]
-## [1,]    1    4
-## [2,]    6    9
-## [3,]   11   14
-## [4,]   16   19
-## [5,]   21   24</code></pre>
+<h2 id="multiple-rowscolumns">Multiple Rows/Columns</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">y[<span class="dv">1</span>:<span class="dv">2</span>,<span class="dv">3</span>:<span class="dv">4</span>]
+y[,<span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">4</span>)]</code></pre></div>
 </section>
 <section class="slide level1">
 
