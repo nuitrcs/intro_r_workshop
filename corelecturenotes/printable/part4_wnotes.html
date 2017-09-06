@@ -11,7 +11,7 @@
 
 <meta name="author" content="Christina Maimone" />
 
-<meta name="date" content="2017-09-04" />
+<meta name="date" content="2017-09-06" />
 
 <title>Intro to R: Data Manipulation and Exploration</title>
 
@@ -119,7 +119,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Intro to R: Data Manipulation and Exploration</h1>
 <h4 class="author"><em>Christina Maimone</em></h4>
-<h4 class="date"><em>2017-09-04</em></h4>
+<h4 class="date"><em>2017-09-06</em></h4>
 
 </div>
 
@@ -182,11 +182,11 @@ head(initial_props)</code></pre>
 <p>We can sort individual vectors with <code>sort</code>, or get ordering information from an individual vector that we can then apply to sort a <code>data.frame</code>.</p>
 <p>Sort 10 random numbers:</p>
 <pre class="r"><code>sort(rnorm(10))</code></pre>
-<pre><code>##  [1] -1.6761054 -0.7731916 -0.7381047 -0.7231733 -0.5749292 -0.3785245
-##  [7]  0.1264895  1.0899750  1.4262024  1.6518906</code></pre>
+<pre><code>##  [1] -1.7608563 -0.8744567 -0.8596589  0.2203531  0.2645071  0.8926501
+##  [7]  1.1986643  1.2214040  1.9848279  2.0254007</code></pre>
 <pre class="r"><code>sort(rnorm(10), decreasing=TRUE)</code></pre>
-<pre><code>##  [1]  1.30546194  0.92451306  0.28589468  0.04112404 -0.21915340
-##  [6] -0.55170441 -0.85196461 -0.91512970 -1.00545221 -1.26765567</code></pre>
+<pre><code>##  [1]  0.96234707  0.90087102  0.86849099  0.53800675  0.34026934
+##  [6]  0.28748159  0.19542651  0.12020676 -0.06520481 -1.18900537</code></pre>
 <p>Sorting a whole <code>data.frame</code> by a column. First let’s just grab a specific year from <code>intitial_props</code>:</p>
 <pre class="r"><code>initial_props_2000 &lt;- initial_props[initial_props$year==2000,]</code></pre>
 <p><code>order</code> retruns the indexes of values in sorted order, so we can use it to order rows in a <code>data.frame</code>:</p>
@@ -269,6 +269,50 @@ head(initial_props)</code></pre>
 <p>Note that in <code>dplyr</code> functions, you can use the column names without the <code>data.frame</code> name within the functions.</p>
 <pre class="r"><code>filter(babynames, name=='Mary' &amp; year &lt; 1900) %&gt;% 
   select(-prop)</code></pre>
+<pre><code>##    year sex name     n
+## 1  1880   F Mary  7065
+## 2  1880   M Mary    27
+## 3  1881   F Mary  6919
+## 4  1881   M Mary    29
+## 5  1882   F Mary  8148
+## 6  1882   M Mary    30
+## 7  1883   F Mary  8012
+## 8  1883   M Mary    32
+## 9  1884   F Mary  9217
+## 10 1884   M Mary    36
+## 11 1885   F Mary  9128
+## 12 1885   M Mary    38
+## 13 1886   F Mary  9889
+## 14 1886   M Mary    32
+## 15 1887   F Mary  9888
+## 16 1887   M Mary    47
+## 17 1888   F Mary 11754
+## 18 1888   M Mary    50
+## 19 1889   F Mary 11648
+## 20 1889   M Mary    41
+## 21 1890   F Mary 12078
+## 22 1890   M Mary    35
+## 23 1891   F Mary 11703
+## 24 1891   M Mary    39
+## 25 1892   F Mary 13172
+## 26 1892   M Mary    50
+## 27 1893   F Mary 12784
+## 28 1893   M Mary    55
+## 29 1894   F Mary 13151
+## 30 1894   M Mary    48
+## 31 1895   F Mary 13446
+## 32 1895   M Mary    47
+## 33 1896   F Mary 13811
+## 34 1896   M Mary    57
+## 35 1897   F Mary 13413
+## 36 1897   M Mary    63
+## 37 1898   F Mary 14406
+## 38 1898   M Mary    50
+## 39 1899   F Mary 13172
+## 40 1899   M Mary    50</code></pre>
+<p>You can also select ranges of columns, and there are special functions to select columns with particular patterns in the name.</p>
+<pre class="r"><code>filter(babynames, name=='Mary' &amp; year &lt; 1900) %&gt;% 
+  select(year:n)</code></pre>
 <pre><code>##    year sex name     n
 ## 1  1880   F Mary  7065
 ## 2  1880   M Mary    27
@@ -415,6 +459,21 @@ head(initial_props)</code></pre>
 <p>Here’s an example of a few common data manipulation, exploration, and cleaning tasks. This isn’t comprehensive, but it will give you a sense of what it’s like working with R on real data.</p>
 <p>We’ll use the <code>schooldata data.frame</code> loaded in a previous section If you don’t have it loaded:</p>
 <pre class="r"><code>schooldata &lt;- read_csv(&quot;https://goo.gl/f4UhMX&quot;) ## school data will be a tibble</code></pre>
+<pre><code>## Parsed with column specification:
+## cols(
+##   courseid = col_integer(),
+##   title = col_character(),
+##   startdate = col_character(),
+##   grade = col_double(),
+##   instructorid = col_integer(),
+##   instructorfirst = col_character(),
+##   instructorlast = col_character(),
+##   instructortitle = col_character(),
+##   studentid = col_integer(),
+##   gender = col_character(),
+##   age = col_integer(),
+##   admissionyear = col_integer()
+## )</code></pre>
 <p>We’ll use both base R and <code>dplyr</code> methods.</p>
 <div id="examine-data" class="section level2">
 <h2>Examine Data</h2>

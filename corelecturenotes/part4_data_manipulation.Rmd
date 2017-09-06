@@ -151,6 +151,14 @@ filter(babynames, name=='Mary' & year < 1900) %>%
   select(-prop)
 ```
 
+You can also select ranges of columns, and there are special functions to select columns with particular patterns in the name.
+
+```{r}
+filter(babynames, name=='Mary' & year < 1900) %>% 
+  select(year:n)
+```
+
+
 You will often see a string of `dplyr` commands start with just the name of the data set, like:
 
 ```{r, eval=FALSE}

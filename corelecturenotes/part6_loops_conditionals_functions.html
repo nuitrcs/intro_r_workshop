@@ -11,7 +11,7 @@
 
 <meta name="author" content="Christina Maimone" />
 
-<meta name="date" content="2017-09-04" />
+<meta name="date" content="2017-09-06" />
 
 <title>Intro to R: Loops, Conditionals, Functions</title>
 
@@ -217,7 +217,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Intro to R: Loops, Conditionals, Functions</h1>
 <h4 class="author"><em>Christina Maimone</em></h4>
-<h4 class="date"><em>2017-09-04</em></h4>
+<h4 class="date"><em>2017-09-06</em></h4>
 
 </div>
 
@@ -234,7 +234,7 @@ if (x &gt;= 10) {
   print(&quot;x is greater than or equal to 10&quot;)
 }
 x</code></pre>
-<pre><code>## [1] 6</code></pre>
+<pre><code>## [1] 4</code></pre>
 <p>Some of you may have gotten different answers. Try executing the code again.</p>
 <p>We can avoid the randomness (useful in finding errors in our code and making the code reproducible) by setting the random seed. Let’s also add some else statements.</p>
 <pre class="r"><code>set.seed(10)
@@ -258,6 +258,8 @@ if (y &lt; 5) {
 } else {
   print(paste(y, &quot;is &gt;= 5&quot;))
 }</code></pre>
+<pre><code>## Warning in if (y &lt; 5) {: the condition has length &gt; 1 and only the first
+## element will be used</code></pre>
 <pre><code>##  [1] &quot;1 is less than 5&quot;  &quot;2 is less than 5&quot;  &quot;3 is less than 5&quot; 
 ##  [4] &quot;4 is less than 5&quot;  &quot;5 is less than 5&quot;  &quot;6 is less than 5&quot; 
 ##  [7] &quot;7 is less than 5&quot;  &quot;8 is less than 5&quot;  &quot;9 is less than 5&quot; 

@@ -676,8 +676,11 @@ colors&lt;-<span class="kw">factor</span>(colors)
 
 <h2 id="factors-1">Factors</h2>
 <p>Be careful of assignments</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">colors[<span class="dv">1</span>]&lt;-<span class="st">&quot;pink&quot;</span>
-colors</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">colors[<span class="dv">1</span>]&lt;-<span class="st">&quot;pink&quot;</span></code></pre></div>
+<pre><code>## Warning in `[&lt;-.factor`(`*tmp*`,
+## 1, value = &quot;pink&quot;): invalid factor
+## level, NA generated</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">colors</code></pre></div>
 <pre><code>## [1] &lt;NA&gt;  blue  green red   red  
 ## [6] blue 
 ## Levels: blue green red</code></pre>

@@ -11,7 +11,7 @@
 
 <meta name="author" content="Christina Maimone" />
 
-<meta name="date" content="2017-09-04" />
+<meta name="date" content="2017-09-06" />
 
 <title>Intro to R: Fundamentals and Data Types</title>
 
@@ -217,7 +217,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Intro to R: Fundamentals and Data Types</h1>
 <h4 class="author"><em>Christina Maimone</em></h4>
-<h4 class="date"><em>2017-09-04</em></h4>
+<h4 class="date"><em>2017-09-06</em></h4>
 
 </div>
 
@@ -474,6 +474,8 @@ is.na(tmp)</code></pre>
 colors&lt;-factor(colors)</code></pre>
 <p>Factors have a limited set of values they can take. The set of acceptable values are the levels:</p>
 <pre class="r"><code>colors[1]&lt;-&quot;pink&quot;</code></pre>
+<pre><code>## Warning in `[&lt;-.factor`(`*tmp*`, 1, value = &quot;pink&quot;): invalid factor level,
+## NA generated</code></pre>
 <p>This gives an error because “pink” wasn’t one of the levels for the factor. To fix this:</p>
 <pre class="r"><code>colors&lt;-factor(colors, levels=c(levels(colors), &quot;pink&quot;)) # re-make the factor with a pink level, even though none of the observations are pink
 colors</code></pre>

@@ -15,7 +15,7 @@ answers<-params$answers
 ```{r global_options, echo = FALSE, include = FALSE}
 knitr::opts_chunk$set(echo=answers, eval=answers,
                       warning = FALSE, message = FALSE,
-                      cache = FALSE, tidy = FALSE, size = "small")
+                      cache = FALSE, tidy = FALSE)
 ```
 
 
