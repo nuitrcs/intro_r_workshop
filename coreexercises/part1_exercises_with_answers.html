@@ -11,7 +11,7 @@
 
 <meta name="author" content="Christina Maimone" />
 
-<meta name="date" content="2017-09-04" />
+<meta name="date" content="2017-09-06" />
 
 <title>Exercises Part 1: Vectors and R Basics</title>
 
@@ -119,7 +119,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Exercises Part 1: Vectors and R Basics</h1>
 <h4 class="author"><em>Christina Maimone</em></h4>
-<h4 class="date"><em>2017-09-04</em></h4>
+<h4 class="date"><em>2017-09-06</em></h4>
 
 </div>
 
@@ -184,11 +184,11 @@ x[!x %in% badvals]</code></pre>
 <pre class="r"><code>'c' %in% random_letters # test for inclusion</code></pre>
 <pre><code>## [1] TRUE</code></pre>
 <pre class="r"><code>which(random_letters == 'c') # get actual position</code></pre>
-<pre><code>## [1]  1 22</code></pre>
+<pre><code>## [1]  4 17 24</code></pre>
 <pre class="r"><code>sort(table(random_letters))</code></pre>
 <pre><code>## random_letters
-## f h j v x c e i l m n o p q r s w y z b g k d t 
-## 1 1 1 1 1 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 3 3 4 4</code></pre>
+## h s t v w b g k l o p q u y a c j e f n m 
+## 1 1 1 1 1 2 2 2 2 2 2 2 2 2 3 3 3 4 4 4 6</code></pre>
 <p><code>which</code> gets you all positions in the vector. <code>match</code> would only give you the index of the first match</p>
 <pre class="r"><code># save the table results
 table_results &lt;- sort(table(random_letters), decreasing=TRUE)
@@ -200,9 +200,9 @@ freq_letter &lt;- names(table_results)[1]
 random_letters[random_letters == freq_letter] &lt;- '*'
 
 random_letters</code></pre>
-<pre><code>##  [1] &quot;c&quot; &quot;o&quot; &quot;q&quot; &quot;g&quot; &quot;b&quot; &quot;y&quot; &quot;*&quot; &quot;v&quot; &quot;k&quot; &quot;p&quot; &quot;b&quot; &quot;x&quot; &quot;w&quot; &quot;f&quot; &quot;b&quot; &quot;e&quot; &quot;i&quot;
-## [18] &quot;e&quot; &quot;*&quot; &quot;h&quot; &quot;y&quot; &quot;c&quot; &quot;s&quot; &quot;n&quot; &quot;k&quot; &quot;k&quot; &quot;t&quot; &quot;g&quot; &quot;t&quot; &quot;z&quot; &quot;r&quot; &quot;p&quot; &quot;o&quot; &quot;t&quot;
-## [35] &quot;t&quot; &quot;s&quot; &quot;z&quot; &quot;l&quot; &quot;*&quot; &quot;g&quot; &quot;m&quot; &quot;j&quot; &quot;i&quot; &quot;*&quot; &quot;l&quot; &quot;m&quot; &quot;n&quot; &quot;q&quot; &quot;w&quot; &quot;r&quot;</code></pre>
+<pre><code>##  [1] &quot;e&quot; &quot;a&quot; &quot;*&quot; &quot;c&quot; &quot;u&quot; &quot;j&quot; &quot;y&quot; &quot;g&quot; &quot;*&quot; &quot;e&quot; &quot;p&quot; &quot;l&quot; &quot;*&quot; &quot;k&quot; &quot;n&quot; &quot;a&quot; &quot;c&quot;
+## [18] &quot;*&quot; &quot;k&quot; &quot;v&quot; &quot;t&quot; &quot;o&quot; &quot;l&quot; &quot;c&quot; &quot;f&quot; &quot;b&quot; &quot;n&quot; &quot;q&quot; &quot;n&quot; &quot;b&quot; &quot;o&quot; &quot;j&quot; &quot;y&quot; &quot;g&quot;
+## [35] &quot;f&quot; &quot;w&quot; &quot;*&quot; &quot;f&quot; &quot;q&quot; &quot;f&quot; &quot;a&quot; &quot;u&quot; &quot;h&quot; &quot;e&quot; &quot;e&quot; &quot;*&quot; &quot;s&quot; &quot;p&quot; &quot;n&quot; &quot;j&quot;</code></pre>
 <p>If you searched the internet for an answer, you may have been able to come up with other solutions.</p>
 </div>
 </div>
@@ -214,7 +214,7 @@ random_letters</code></pre>
 <pre class="r"><code>rm(x)
 ls() #list all objects, check by looking</code></pre>
 <pre><code>## [1] &quot;answers&quot;        &quot;badvals&quot;        &quot;freq_letter&quot;    &quot;iknit&quot;         
-## [5] &quot;params&quot;         &quot;random_letters&quot; &quot;table_results&quot;</code></pre>
+## [5] &quot;objs&quot;           &quot;params&quot;         &quot;random_letters&quot; &quot;table_results&quot;</code></pre>
 <pre class="r"><code>&quot;x&quot; %in% ls() # is &quot;x&quot; in the output?</code></pre>
 <pre><code>## [1] FALSE</code></pre>
 <p>You can also see the list of objects in the Environment tab in the upper right window in RStudio.</p>
@@ -230,10 +230,10 @@ ls() #list all objects, check by looking</code></pre>
 <pre class="r"><code>library(fortunes) # don't forget to load it!
 fortune()</code></pre>
 <pre><code>## 
-## The style for JSS now enforces (via Achimitization) the use of quotes.
-##    -- Michael Friendly (on whether to quote or not to quote arguments like
-##       library(&quot;Hmisc&quot;) or help(&quot;mean&quot;))
-##       R-help (March 2011)</code></pre>
+## If you think you can learn all of R, you are wrong. For the foreseeable
+## future you will not even be able to keep up with the new additions.
+##    -- Patrick Burns (Inferno-ish R)
+##       CambR User Group Meeting, Cambridge (May 2012)</code></pre>
 </div>
 </div>
 <div id="challenge-exercise-working-with-strings" class="section level1">
@@ -304,12 +304,12 @@ months&lt;-factor(months)
 table(months) # months should be alphabetical</code></pre>
 <pre><code>## months
 ## Apr Aug Dec Feb Jan Jul Jun Mar May Nov Oct Sep 
-##   4   1   1   4   2   3   4   4   3   5   4   5</code></pre>
+##   2   3   4   6   3   3   1   4   4   2   4   4</code></pre>
 <pre class="r"><code>months&lt;-factor(months, levels=month.abb, ordered=TRUE)
 table(months) # months should be in order</code></pre>
 <pre><code>## months
 ## Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec 
-##   2   4   4   4   3   4   3   1   5   4   5   1</code></pre>
+##   3   6   4   2   4   1   3   3   4   4   2   4</code></pre>
 </div>
 </div>
 <div id="challenge-exercise-dates" class="section level1">
@@ -320,21 +320,21 @@ table(months) # months should be in order</code></pre>
 <h3>Answer</h3>
 <p>If you were born on January 1, 1980:</p>
 <pre class="r"><code>Sys.Date()</code></pre>
-<pre><code>## [1] &quot;2017-09-04&quot;</code></pre>
+<pre><code>## [1] &quot;2017-09-06&quot;</code></pre>
 <pre class="r"><code>Sys.Date() - as.Date(&quot;1980-01-01&quot;)</code></pre>
-<pre><code>## Time difference of 13761 days</code></pre>
+<pre><code>## Time difference of 13763 days</code></pre>
 <pre class="r"><code>difftime(Sys.Date(), as.Date(&quot;1980-01-01&quot;), units=&quot;weeks&quot;)</code></pre>
-<pre><code>## Time difference of 1965.857 weeks</code></pre>
+<pre><code>## Time difference of 1966.143 weeks</code></pre>
 <pre class="r"><code>weekdays(as.Date(&quot;1980-01-01&quot;))</code></pre>
 <pre><code>## [1] &quot;Tuesday&quot;</code></pre>
 <p>Or, using the lubridate package, although it doesn’t have an easy way to get name of the day of the week</p>
 <pre class="r"><code>library(lubridate)
 today()</code></pre>
-<pre><code>## [1] &quot;2017-09-04&quot;</code></pre>
+<pre><code>## [1] &quot;2017-09-06&quot;</code></pre>
 <pre class="r"><code>today() - ymd(&quot;1980-01-01&quot;)</code></pre>
-<pre><code>## Time difference of 13761 days</code></pre>
+<pre><code>## Time difference of 13763 days</code></pre>
 <pre class="r"><code>interval(ymd(&quot;1980-01-01&quot;), today()) / weeks(1)</code></pre>
-<pre><code>## [1] 1965.857</code></pre>
+<pre><code>## [1] 1966.143</code></pre>
 <pre class="r"><code>wday(ymd(&quot;1980-01-01&quot;))</code></pre>
 <pre><code>## [1] 3</code></pre>
 <pre class="r"><code>weekdays(ymd(&quot;1980-01-01&quot;)) ## weekdays isn't in lubridate</code></pre>
