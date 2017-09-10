@@ -36,6 +36,9 @@ If you won't be able to connect to the Northwestern network on an independent wi
 
 To do so, start R, then run the commands in `packagelist.r` and `downloads.r` (modify the file path in `downloads.r` first).   If you need assistance, please contact the workshop instructor before the workshop.
 
+# Other Resources
+
+An extensive list of good R resources can be found in the [main R workshop repository](https://github.com/nuitrcs/rworkshops).
 
 # Notices
 

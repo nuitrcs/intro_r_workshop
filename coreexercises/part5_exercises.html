@@ -11,7 +11,7 @@
 
 <meta name="author" content="Christina Maimone" />
 
-<meta name="date" content="2017-09-06" />
+<meta name="date" content="2017-09-09" />
 
 <title>Exercises Part 5: Visualization</title>
 
@@ -119,7 +119,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Exercises Part 5: Visualization</h1>
 <h4 class="author"><em>Christina Maimone</em></h4>
-<h4 class="date"><em>2017-09-06</em></h4>
+<h4 class="date"><em>2017-09-09</em></h4>
 
 </div>
 
@@ -148,13 +148,13 @@ data(gapminder)</code></pre>
 </div>
 <div id="ggplot-exercise-multiple-lines-and-facets" class="section level1">
 <h1><code>ggplot</code> Exercise: Multiple lines and facets</h1>
-<p>Using the <code>gapminder</code> data, create a plot to show the change in life expectancy over time. Plot one line for each country. Color the lines by continent. Include decent labels on your plot.</p>
+<p>Using the <code>gapminder</code> data, create a plot to show the change in life expectancy over time. Plot one line for each country. Color the lines by continent. Include decent labels on your plot. Hint: you will set 4 aesthetics: x, y, by, and color.</p>
 <p>Then add the points for each observation to the plot as well (so that you have a line with points on it). Hint: you can use multiple geoms in the same plot.</p>
 <p>Then split out the countries by continent, so there is one plot per continent. Challenge: Remove the legend on this final plot, as it is redundant with the plot labeling. Hint: look at <code>legend.position</code> argument to the <code>theme</code> function.</p>
 </div>
-<div id="ggplot-challenge-exercise-add-a-trend-line" class="section level1">
-<h1><code>ggplot</code> Challenge Exercise: Add a Trend Line</h1>
-<p>Create a scatter plot of life expectancy vs. log of population for the year 2007. Color points by continent. Add a linear regression line for each continent (hint: <code>method=lm</code> for linear regression).</p>
+<div id="ggplot-exercise-add-a-trend-line" class="section level1">
+<h1><code>ggplot</code> Exercise: Add a Trend Line</h1>
+<p>Create a scatter plot of life expectancy vs. log of population for the year 2007. Color points by continent. Add a linear regression line for each continent. Hint: use <code>geom_smooth</code> and set <code>method=lm</code> for linear regression.</p>
 <p>Then redo the plot with a single overall trend line (don’t worry about coloring points by continent anymore). What do you notice?</p>
 </div>
 

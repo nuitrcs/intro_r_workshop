@@ -111,7 +111,7 @@ The example palette above is a color-blind friendly palette from http://jfly.iam
 
 # `ggplot` Exercise: Multiple lines and facets
 
-Using the `gapminder` data, create a plot to show the change in life expectancy over time.  Plot one line for each country.  Color the lines by continent.  Include decent labels on your plot.
+Using the `gapminder` data, create a plot to show the change in life expectancy over time.  Plot one line for each country.  Color the lines by continent.  Include decent labels on your plot.  Hint: you will set 4 aesthetics: x, y, by, and color.
 
 Then add the points for each observation to the plot as well (so that you have a line with points on it).  Hint: you can use multiple geoms in the same plot.
 
@@ -150,9 +150,9 @@ ggplot(gapminder, aes(y=lifeExp,
 ```
 
 
-# `ggplot` Challenge Exercise: Add a Trend Line
+# `ggplot` Exercise: Add a Trend Line
 
-Create a scatter plot of life expectancy vs. log of population for the year 2007.  Color points by continent.  Add a linear regression line for each continent (hint: `method=lm` for linear regression).
+Create a scatter plot of life expectancy vs. log of population for the year 2007.  Color points by continent.  Add a linear regression line for each continent.  Hint: use `geom_smooth` and set `method=lm` for linear regression.
 
 Then redo the plot with a single overall trend line (don't worry about coloring points by continent anymore).  What do you notice?
 
