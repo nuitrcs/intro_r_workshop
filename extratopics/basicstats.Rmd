@@ -205,17 +205,17 @@ r2 <- lm(mpg ~ hp + I(hp^2) + am + cyl, data=mtcars)
 summary(r2)
 ```
 
-We added cylinders as a numeric variable above, but maybe it should be categorical?  Also, a different way to specify the horsepower terms
+We added cylinders as a numeric variable above, but maybe it should be categorical?  Also, a different way to specify the horsepower terms with `poly`
 
 ```{r}
-r3 <- lm(mpg ~ poly(hp, 2) + am + I(factor(cyl)), data=mtcars)
+r3 <- lm(mpg ~ poly(hp, 2, raw=TRUE) + am + I(factor(cyl)), data=mtcars)
 summary(r3)
 ```
 
 Note that it picked one group to be the base comparison group, and created variables for the other two.  If, instead of seeing offsets from a base group, we want indicator variables for all groups, we can drop the automatically added intercept term:
 
 ```{r}
-r4 <- lm(mpg ~ -1 + poly(hp, 2) + am + I(factor(cyl)), data=mtcars)
+r4 <- lm(mpg ~ -1 + poly(hp, 2, raw=TRUE) + am + I(factor(cyl)), data=mtcars)
 summary(r4)
 ```
 
