@@ -43,6 +43,7 @@ You can use `?Arithmetic` to pull up the help for arithmetic operators.
 _If you type an incomplete command, R will wait for you to finish it.  You can spread commands over multiple lines as long as you break the code so that a line isn't a complete command.  The + sign at the beginning of the line in the console indicates a continued command._
 ```
 
+
 ## A few functions
 
 Functions are called with `functionName(parameters)`.  Multiple paramters are comma-separated.  Paramters can be named. For unnamed parameters, the order matters.  R functions don't change the objects passed to them (more on this later).
@@ -65,6 +66,21 @@ TRUE == FALSE
 ```
 
 Note that character vectors/strings can use single or double quotes.
+
+### Caution
+
+A point of caution.  As in other programs, numbers have finite precision:
+
+```{r}
+1/49 * 49 == 1
+```
+
+You can use `near()` to check if numbers are equal within a small tolerance:
+
+```{r}
+near(1 / 49 * 49, 1)
+```
+
 
 ## Logical Operators
 

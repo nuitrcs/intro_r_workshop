@@ -1,3 +1,5 @@
+**Updated materials for Summer 2018 are available at https://github.com/nuitrcs/r_intro_june2018**
+
 # Intro to R Workshop Materials
 
 # Materials Overview
